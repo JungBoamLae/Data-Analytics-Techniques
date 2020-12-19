@@ -1,0 +1,10 @@
+import cv2
+
+img = cv2.imread("AA.jpg")
+height, width = img.shape[:2]
+print("이미지 가로:" + str(width))
+print("이미지 세로:" + str(height))
+cv2.namedWindow("img",cv2.WINDOW_NORMAL)
+cv2.imshow("img",img)
+cv2.waitkey(0)
+cv2.destroyAllWindow()
