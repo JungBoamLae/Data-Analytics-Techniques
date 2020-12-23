@@ -1,0 +1,22 @@
+import cv2
+
+#준비
+cascade_file = "haarcascade_frontalface_alt.xml"
+cascade = cv2.CascadeClassifier(cascade_file)
+
+#검출
+img = cv2.imread()
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+face_list = cascade.detectMultiScale(gray, minSize=(50,50))
+
+#검출한 얼굴 표시하기
+for (x,y,w,h) in face_list:
+    color = (0,0,225)
+    pen_w = 3
+    cv2.rectangle(img, (x, y), (x+w, y+h), color, thickness = pen_w)
+    
+cv2.namedWindow("img",cv2.WINDOW_NORMAL)
+cv2.inshow("img",img)
+cv2.imwrite("temp.jpg",img)
+cv2.waitkey(0)
+cv2.destroyAllWindows()
