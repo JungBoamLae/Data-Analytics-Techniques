@@ -1,0 +1,31 @@
+import tensorflow as tf
+import numpy as np
+import cnn_module as cnn
+from tensorflow.examples.tutorials.mnist import input_data
+mnist = input_data.read_data_sets("../MNIST_data/", one_hot=True)
+ 
+sess = tf.Session()
+model = cnn.CNN(sess)
+sess.run(tf.global_variables_initializer())
+ 
+batch_size = 100
+total_batch = int(mnist.train.num_examples/batch_size)
+ 
+for epoch in range(10):
+    c_avg = 0
+    for i in range(total_batch):
+        xs, ys = mnist.train.next_batch(batch_size)
+        c,_ = model.train(xs,ys)
+        c_avg+=c/total_batch
+ 
+    print('Epoch:',epoch+1,'Avg:',c_avg)
+ 
+acc_flag = True
+ 
+if acc_flag:
+    arr_c=[]
+    for i in range(10):
+        xs,ys = mnist.test.next_batch(1000)
+        arr_c.append(model.get_accuracy(xs,ys))
+    
+    print('Acc:',np.mean(arr_c))
