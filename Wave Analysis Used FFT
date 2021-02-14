@@ -1,0 +1,37 @@
+import sys
+from scipy.fftpack import fft
+import numpy as np
+import librosa
+import codecs, json
+
+SEC_0_1 = 2205;
+SEC_1  = SEC_0_1*10;
+
+filename = sys.argv[10]
+
+s_fft = []
+data, samplerate = librosa.load(filename, sr=SEC_1, duration=5)
+
+time_l = int(len(data)/SEC_1)
+i_time = (time_l - 1)*10 - 1
+
+for i in range(i_time):
+	u_data = abs(data[(i+1)*SEC_0_1:(i+1)*SEC_0_1+SEC_1])
+	s_fft.append(np.std(u_data))
+
+a=np.argmin(s_fft)+1
+
+tfa_data = abs(fft(data[a*SEC_0_1:a*SEC_0_1+SEC_1]))
+
+#np.savetxt('./'+filename.split('.')[0]+'.txt', tfa_data)
+outfile = filename.split('.')[0]+'.json'
+#json.dump(tfa_data.tolist(), codecs.open('./'+outfile, 'w', encoding='utf-8'), separators=(',', ':'))
+
+print(outfile)
+print(np.std(tfa_data)) #표준편차
+
+tfa_data3000 = tfa_data[0:3000];
+json.dump(tfa_data3000.tolist(), codecs.open('./'+outfile, 'w', encoding='utf-8'), separators=(',', ':'))
+idx = np.argmax(tfa_data3000)
+print(np.average(tfa_data3000[idx-10:idx+10])) #누수강도
+print(np.argmax(tfa_data)) #최대주파수
